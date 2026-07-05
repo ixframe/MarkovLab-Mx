@@ -102,3 +102,90 @@ Public Function MatrixCopy(ByVal sourceMatrix As Variant) As Variant
     MatrixCopy = resultMatrix
 
 End Function
+
+
+'-------------------------------------------------------------------------------
+' Multiplica dos matrices bidimensionales.
+'
+' Entrada:
+'   matrixA = primera matriz
+'   matrixB = segunda matriz
+'
+' Salida:
+'   Producto matricial matrixA * matrixB
+'
+' Condicion:
+'   El numero de columnas de matrixA debe ser igual
+'   al numero de filas de matrixB.
+'-------------------------------------------------------------------------------
+Public Function MatrixMultiply(ByVal matrixA As Variant, _
+                               ByVal matrixB As Variant) As Variant
+
+    Dim resultMatrix() As Double
+
+    Dim firstRowA As Long
+    Dim lastRowA As Long
+    Dim firstColA As Long
+    Dim lastColA As Long
+
+    Dim firstRowB As Long
+    Dim lastRowB As Long
+    Dim firstColB As Long
+    Dim lastColB As Long
+
+    Dim nRowsA As Long
+    Dim nColsA As Long
+    Dim nRowsB As Long
+    Dim nColsB As Long
+
+    Dim i As Long
+    Dim j As Long
+    Dim k As Long
+
+    Dim sumValue As Double
+
+    firstRowA = LBound(matrixA, 1)
+    lastRowA = UBound(matrixA, 1)
+    firstColA = LBound(matrixA, 2)
+    lastColA = UBound(matrixA, 2)
+
+    firstRowB = LBound(matrixB, 1)
+    lastRowB = UBound(matrixB, 1)
+    firstColB = LBound(matrixB, 2)
+    lastColB = UBound(matrixB, 2)
+
+    nRowsA = lastRowA - firstRowA + 1
+    nColsA = lastColA - firstColA + 1
+
+    nRowsB = lastRowB - firstRowB + 1
+    nColsB = lastColB - firstColB + 1
+
+    If nColsA <> nRowsB Then
+        Err.Raise vbObjectError + 1002, _
+                  "MatrixMultiply", _
+                  "Las dimensiones de las matrices no son compatibles."
+    End If
+
+    ReDim resultMatrix(1 To nRowsA, 1 To nColsB)
+
+    For i = 1 To nRowsA
+        For j = 1 To nColsB
+
+            sumValue = 0#
+
+            For k = 1 To nColsA
+                sumValue = sumValue + _
+                    CDbl(matrixA(firstRowA + i - 1, _
+                                 firstColA + k - 1)) * _
+                    CDbl(matrixB(firstRowB + k - 1, _
+                                 firstColB + j - 1))
+            Next k
+
+            resultMatrix(i, j) = sumValue
+
+        Next j
+    Next i
+
+    MatrixMultiply = resultMatrix
+
+End Function
