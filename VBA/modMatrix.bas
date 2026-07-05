@@ -64,3 +64,41 @@ Public Function MatrixIdentity(ByVal n As Long) As Variant
     MatrixIdentity = A
 
 End Function
+
+
+'-------------------------------------------------------------------------------
+' Crea una copia independiente de una matriz bidimensional.
+'
+' Entrada:
+'   sourceMatrix = matriz original
+'
+' Salida:
+'   Copia independiente de la matriz original
+'-------------------------------------------------------------------------------
+Public Function MatrixCopy(ByVal sourceMatrix As Variant) As Variant
+
+    Dim resultMatrix() As Double
+    Dim firstRow As Long
+    Dim lastRow As Long
+    Dim firstCol As Long
+    Dim lastCol As Long
+    Dim i As Long
+    Dim j As Long
+
+    firstRow = LBound(sourceMatrix, 1)
+    lastRow = UBound(sourceMatrix, 1)
+    firstCol = LBound(sourceMatrix, 2)
+    lastCol = UBound(sourceMatrix, 2)
+
+    ReDim resultMatrix(firstRow To lastRow, _
+                       firstCol To lastCol)
+
+    For i = firstRow To lastRow
+        For j = firstCol To lastCol
+            resultMatrix(i, j) = CDbl(sourceMatrix(i, j))
+        Next j
+    Next i
+
+    MatrixCopy = resultMatrix
+
+End Function
