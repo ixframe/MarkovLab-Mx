@@ -189,3 +189,84 @@ Public Function MatrixMultiply(ByVal matrixA As Variant, _
     MatrixMultiply = resultMatrix
 
 End Function
+
+'-------------------------------------------------------------------------------
+' Calcula una potencia entera no negativa de una matriz cuadrada.
+'
+' Entrada:
+'   sourceMatrix = matriz cuadrada original
+'   exponent     = exponente entero no negativo
+'
+' Salida:
+'   sourceMatrix elevada a la potencia exponent
+'
+' Casos especiales:
+'   exponent = 0  -> matriz identidad
+'   exponent = 1  -> copia de la matriz original
+'
+' Metodo:
+'   Exponenciacion binaria
+'-------------------------------------------------------------------------------
+Public Function MatrixPower(ByVal sourceMatrix As Variant, _
+                            ByVal exponent As Long) As Variant
+
+    Dim firstRow As Long
+    Dim lastRow As Long
+    Dim firstCol As Long
+    Dim lastCol As Long
+
+    Dim nRows As Long
+    Dim nCols As Long
+
+    Dim resultMatrix As Variant
+    Dim baseMatrix As Variant
+
+    Dim currentExponent As Long
+
+    firstRow = LBound(sourceMatrix, 1)
+    lastRow = UBound(sourceMatrix, 1)
+    firstCol = LBound(sourceMatrix, 2)
+    lastCol = UBound(sourceMatrix, 2)
+
+    nRows = lastRow - firstRow + 1
+    nCols = lastCol - firstCol + 1
+
+    If nRows <> nCols Then
+        Err.Raise vbObjectError + 1003, _
+                  "MatrixPower", _
+                  "La matriz debe ser cuadrada."
+    End If
+
+    If exponent < 0 Then
+        Err.Raise vbObjectError + 1004, _
+                  "MatrixPower", _
+                  "El exponente debe ser mayor o igual que cero."
+    End If
+
+    resultMatrix = MatrixIdentity(nRows)
+
+    If exponent = 0 Then
+        MatrixPower = resultMatrix
+        Exit Function
+    End If
+
+    baseMatrix = MatrixCopy(sourceMatrix)
+    currentExponent = exponent
+
+    Do While currentExponent > 0
+
+        If (currentExponent Mod 2) = 1 Then
+            resultMatrix = MatrixMultiply(resultMatrix, baseMatrix)
+        End If
+
+        currentExponent = currentExponent \ 2
+
+        If currentExponent > 0 Then
+            baseMatrix = MatrixMultiply(baseMatrix, baseMatrix)
+        End If
+
+    Loop
+
+    MatrixPower = resultMatrix
+
+End Function
